@@ -17,13 +17,19 @@ public:
 	WallMode GetWallMode() const;
 	Point GetTopLeft() const;
 	Point GetBottomRight() const;
+	Point GetFoodPos() const;
 	
-	void DrawBoard(sf::RenderWindow& window);
+	void EatFood();
 	
-	static float RandomFloat(float min, float max);
+	void GenerateFood(float radius);
+	void DrawBoard(sf::RenderWindow& window, float radius);
 	
 private:
+	static size_t RandomNumber(size_t min, size_t max);
+	
 	Borders m_wall;
 	WallMode m_wallMode;
+	bool m_isThereFood;
+	Point m_food;
 };
 #endif /*__BOARD_HPP__*/

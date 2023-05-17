@@ -16,7 +16,7 @@ int main()
 					Point(windowXSize, windowYSize), 
 					thickness, sf::Color::Blue, sf::Color::Transparent);
 	
-	Board board(wall, Board::WallMode::KILL);
+	Board board(wall, Board::WallMode::WARP);
 	
 	float radius = 10;
 	float speed = 10;
@@ -25,7 +25,7 @@ int main()
 						windowYSize/2 + thickness + radius);
 	
 	Snake snake(radius, startingPt, speed, Snake::MoveDirection::UP, 
-				sf::Color::Red);
+				sf::Color::Green);
 	
 	sf::Clock clock;
 	
@@ -61,20 +61,20 @@ int main()
         	snake.IncreaseSize();
         }
         
-        
        	sf::Time elapsed = clock.getElapsedTime();
        	
        	bool deathStatus = snake.GetDeathStatus();
        	
        	if(elapsed.asMilliseconds() > 1000 / snake.GetSpeed() && !deathStatus)
        	{
-			snake.Move(wall);
+       		board.GenerateFood(snake.GetRadius());
+			snake.Move(board);
 			clock.restart();
        	}
        	
         window.clear();
         
-        board.DrawBoard(window);
+        board.DrawBoard(window, snake.GetRadius());
         snake.DrawSnake(window);
         
         window.display();

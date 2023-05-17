@@ -34,7 +34,7 @@ clean :
 	rm -f $(OPATH)*.o $(BPATH)*.out
 
 run :
-	./$(BPATH)snake.out
+	./$(BPATH)snake_game.out
 
 gitupdate :
 	git add .

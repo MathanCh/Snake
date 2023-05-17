@@ -63,7 +63,7 @@ void Snake::SetDirection(MoveDirection direction)
 	m_moveDirection = direction;
 }
 
-void Snake::Move(Borders wall)
+void Snake::Move(Board& board)
 {
 	float amount = 2 * m_radius;
 	
@@ -75,6 +75,8 @@ void Snake::Move(Borders wall)
 			nextPos.setXY(m_pos.GetX() - amount, m_pos.GetY());
 			
 			CheckSelf(nextPos);
+			CheckWall(board, nextPos);
+			CheckFood(board, nextPos);
 			
 			m_snake.push_back(Point(nextPos));
 			break;
@@ -83,6 +85,8 @@ void Snake::Move(Borders wall)
 			nextPos.setXY(m_pos.GetX() + amount, m_pos.GetY());
 			
 			CheckSelf(nextPos);
+			CheckWall(board, nextPos);
+			CheckFood(board, nextPos);
 			
 			m_snake.push_back(Point(nextPos));
 			break;
@@ -91,6 +95,8 @@ void Snake::Move(Borders wall)
 			nextPos.setXY(m_pos.GetX(), m_pos.GetY() - amount);
 			
 			CheckSelf(nextPos);
+			CheckWall(board, nextPos);
+			CheckFood(board, nextPos);
 			
 			m_snake.push_back(Point(nextPos));
 			break;
@@ -99,6 +105,8 @@ void Snake::Move(Borders wall)
 			nextPos.setXY(m_pos.GetX(), m_pos.GetY() + amount);
 			
 			CheckSelf(nextPos);
+			CheckWall(board, nextPos);
+			CheckFood(board, nextPos);
 			
 			m_snake.push_back(Point(nextPos));
 			break;
@@ -133,6 +141,46 @@ void Snake::DrawSnake(sf::RenderWindow& window)
 	}
 }
 
+void Snake::CheckWall(Board& board, Point& nextPos)
+{
+	Board::WallMode mode(board.GetWallMode());
+	
+	Point topLeft(board.GetTopLeft());
+	Point bottomRight(board.GetBottomRight());
+	
+	switch(mode)
+	{
+		case Board::KILL:
+			if(	nextPos.GetX() < topLeft.GetX() || 
+				nextPos.GetX() > bottomRight.GetX() || 
+				nextPos.GetY() < topLeft.GetY() || 
+				nextPos.GetY() > bottomRight.GetY())
+			{
+				m_isDead = true;
+			}
+			break;
+		
+		case Board::WARP:
+			if(nextPos.GetX() < topLeft.GetX())
+			{
+				nextPos.SetX(bottomRight.GetX() - 2 * m_radius);
+			}
+			else if(nextPos.GetX() > bottomRight.GetX())
+			{
+				nextPos.SetX(topLeft.GetX());
+			}
+			else if(nextPos.GetY() < topLeft.GetY())
+			{
+				nextPos.SetY(bottomRight.GetY() - 2 * m_radius);
+			}
+			else if(nextPos.GetY() > bottomRight.GetY())
+			{
+				nextPos.SetY(topLeft.GetY());
+			}
+			break;
+	}
+}
+
 void Snake::CheckSelf(Point nextPos)
 {
 	for(auto iter = m_snake.begin(); m_snake.end() != iter; ++iter)
@@ -143,6 +191,29 @@ void Snake::CheckSelf(Point nextPos)
 		}
 	}
 }
+
+void Snake::CheckFood(Board& board, Point nextPos)
+{
+	if(nextPos == board.GetFoodPos())
+	{
+		m_isGrowing = true;
+		board.EatFood();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

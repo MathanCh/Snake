@@ -33,15 +33,16 @@ public:
 	void setPos(float x, float y);
 	void SetDirection(MoveDirection direction);
 	
-	void Move(Borders wall);
+	void Move(Board& board);
 	
 	void IncreaseSize();
 	
 	void DrawSnake(sf::RenderWindow& window);
 	
 private:
-	void CheckWall(Board board);
+	void CheckWall(Board& board, Point& nextPos);
 	void CheckSelf(Point nextPos);
+	void CheckFood(Board& board, Point nextPos);
 	
 	std::vector<Point> m_snake;
 	float m_size;
