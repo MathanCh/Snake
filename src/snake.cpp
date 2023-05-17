@@ -1,34 +1,35 @@
 #include "snake.hpp"
 
+#include <iostream>
+
 Snake::Snake(	float radius_, Point center_, float speed_, 
 			MoveDirection moveDirection_, sf::Color color_):
-m_head(radius_), 
-m_tail(), 
+m_snake(), 
 m_size(0), 
 m_radius(radius_), 
 m_color(color_), 
-m_center(center_), 
+m_pos(Point(center_.GetX() - m_radius, center_.GetY() - m_radius)), 
 m_speed(speed_), 
-m_moveDirection(moveDirection_)
+m_moveDirection(moveDirection_), 
+m_isGrowing(false), 
+m_isDead(false)
 {
-	m_head.setFillColor(color_);
-	
-	UpdatePos();
+	m_snake.push_back(m_pos);
 }
 
 Point Snake::GetPos() const
 {
-	return m_center;
+	return m_pos;
 }
 
 float Snake::GetXPos() const
 {
-	return m_center.GetX();
+	return m_pos.GetX();
 }
 	
 float Snake::GetYPos() const
 {
-	return m_center.GetY();
+	return m_pos.GetY();
 }
 
 float Snake::GetRadius() const
@@ -36,19 +37,25 @@ float Snake::GetRadius() const
 	return m_radius;
 }
 
+float Snake::GetSpeed() const
+{
+	return m_speed;
+}
+
+bool Snake::GetDeathStatus() const
+{
+	return m_isDead;
+}
+
 void Snake::SetPos(Point newPos)
 {
-	m_center = newPos;
-	
-	UpdatePos();
+	m_pos = newPos;
 }
 
 void Snake::setPos(float x, float y)
 {
-	m_center.SetX(x);
-	m_center.SetY(y);
-	
-	UpdatePos();
+	m_pos.SetX(x);
+	m_pos.SetY(y);
 }
 
 void Snake::SetDirection(MoveDirection direction)
@@ -58,26 +65,60 @@ void Snake::SetDirection(MoveDirection direction)
 
 void Snake::Move(Borders wall)
 {
-	//Point topLeft = wall.GetTopLeftPt();
-	//Point bottomRight = wall.GetBottomRightPt();
+	float amount = 2 * m_radius;
 	
-	MoveHead(m_speed);
+	Point nextPos;
 	
-	UpdatePos();
-}
-
-void Snake::UpdatePos()
-{
-	//std::shared_ptr<point>();
+	switch(m_moveDirection)
+	{
+		case LEFT:
+			nextPos.setXY(m_pos.GetX() - amount, m_pos.GetY());
+			
+			CheckSelf(nextPos);
+			
+			m_snake.push_back(Point(nextPos));
+			break;
+		
+		case RIGHT:
+			nextPos.setXY(m_pos.GetX() + amount, m_pos.GetY());
+			
+			CheckSelf(nextPos);
+			
+			m_snake.push_back(Point(nextPos));
+			break;
+		
+		case UP:
+			nextPos.setXY(m_pos.GetX(), m_pos.GetY() - amount);
+			
+			CheckSelf(nextPos);
+			
+			m_snake.push_back(Point(nextPos));
+			break;
+		
+		case DOWN:
+			nextPos.setXY(m_pos.GetX(), m_pos.GetY() + amount);
+			
+			CheckSelf(nextPos);
+			
+			m_snake.push_back(Point(nextPos));
+			break;
+	}
 	
-	m_head.setPosition(m_center.GetX() - m_radius, m_center.GetY() - m_radius);
+	m_pos = nextPos;
+	
+	if(!m_isGrowing)
+	{
+		m_snake.erase(m_snake.begin());
+	}
+	else
+	{
+		m_isGrowing = false;
+	}
 }
 
 void Snake::IncreaseSize()
 {
-	m_tail.insert(std::shared_ptr<Point>(new Point(m_center)));
-	
-	MoveHead(m_speed);
+	m_isGrowing = true;
 }
 
 void Snake::DrawSnake(sf::RenderWindow& window)
@@ -85,42 +126,23 @@ void Snake::DrawSnake(sf::RenderWindow& window)
 	sf::CircleShape segment(m_radius);
 	segment.setFillColor(m_color);
 	
-	for(auto iter = m_tail.begin(); m_tail.end() != iter; ++iter)
+	for(auto iter = m_snake.begin(); m_snake.end() != iter; ++iter)
 	{
-		segment.setPosition((*iter)->GetX() - m_radius, (*iter)->GetY() - m_radius);
+		segment.setPosition((*iter).GetX(), (*iter).GetY());
 		window.draw(segment);
 	}
-	
-	window.draw(m_head);
 }
 
-void Snake::MoveHead(float amount)
+void Snake::CheckSelf(Point nextPos)
 {
-	switch(m_moveDirection)
+	for(auto iter = m_snake.begin(); m_snake.end() != iter; ++iter)
 	{
-		case LEFT:
-			m_center.SetX(m_center.GetX() - amount);
-			m_center.SetY(m_center.GetY());
-			break;
-		
-		case RIGHT:
-			m_center.SetX(m_center.GetX() + amount);
-			m_center.SetY(m_center.GetY());
-			break;
-		
-		case UP:
-			m_center.SetX(m_center.GetX());
-			m_center.SetY(m_center.GetY() - amount);
-			break;
-		
-		case DOWN:
-			m_center.SetX(m_center.GetX());
-			m_center.SetY(m_center.GetY() + amount);
-			break;
+		if(nextPos == (*iter))
+		{
+			m_isDead = true;
+		}
 	}
 }
-
-
 
 
 

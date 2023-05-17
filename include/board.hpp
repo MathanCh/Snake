@@ -14,6 +14,10 @@ public:
 	
 	Board(Borders wall_, WallMode wallMode_);
 	
+	WallMode GetWallMode() const;
+	Point GetTopLeft() const;
+	Point GetBottomRight() const;
+	
 	void DrawBoard(sf::RenderWindow& window);
 	
 	static float RandomFloat(float min, float max);

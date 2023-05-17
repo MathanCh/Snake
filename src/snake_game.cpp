@@ -5,19 +5,29 @@
 
 int main()
 {
-	float windowXSize = 500;
-	float windowYSize = 500;
-	sf::RenderWindow window(sf::VideoMode(windowXSize, windowYSize), "Snake");
+	float windowXSize = 800;
+	float windowYSize = 800;
 	
 	float thickness = 5;
 	
+	sf::RenderWindow window(sf::VideoMode(windowXSize + 2 * thickness, windowYSize + 2 * thickness), "Snake");
+	
 	Borders wall(	Point(thickness, thickness), 
-					Point(windowXSize - 2 * thickness, windowYSize - (2 * thickness)), 
+					Point(windowXSize, windowYSize), 
 					thickness, sf::Color::Blue, sf::Color::Transparent);
 	
 	Board board(wall, Board::WallMode::KILL);
 	
-	Snake snake(10, Point(250, 250), 0.25, Snake::MoveDirection::UP, sf::Color::Red);
+	float radius = 10;
+	float speed = 10;
+	
+	Point startingPt(	windowXSize/2 + thickness + radius, 
+						windowYSize/2 + thickness + radius);
+	
+	Snake snake(radius, startingPt, speed, Snake::MoveDirection::UP, 
+				sf::Color::Red);
+	
+	sf::Clock clock;
 	
 	while (window.isOpen())
     {	
@@ -29,7 +39,7 @@ int main()
                 window.close();
             }
         }
-        
+       	
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		{
 			snake.SetDirection(Snake::MoveDirection::LEFT);
@@ -49,12 +59,19 @@ int main()
         else if(sf::Keyboard::isKeyPressed(sf::Keyboard::F))
         {
         	snake.IncreaseSize();
-        	
-        	//std::cout << "increased size" << std::endl;
         }
         
-        snake.Move(wall);
         
+       	sf::Time elapsed = clock.getElapsedTime();
+       	
+       	bool deathStatus = snake.GetDeathStatus();
+       	
+       	if(elapsed.asMilliseconds() > 1000 / snake.GetSpeed() && !deathStatus)
+       	{
+			snake.Move(wall);
+			clock.restart();
+       	}
+       	
         window.clear();
         
         board.DrawBoard(window);

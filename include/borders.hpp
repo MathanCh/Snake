@@ -8,7 +8,7 @@
 class Borders
 {
 public:
-	Borders(	Point topLeftPt_, Point bottomRightPt_, float thickness_, 
+	Borders(Point topLeftPt_, Point bottomRightPt_, float thickness_, 
 			sf::Color outlineColor_, sf::Color fillColor_);
 	
 	operator sf::RectangleShape() const;

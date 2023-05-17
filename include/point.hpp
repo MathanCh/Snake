@@ -10,9 +10,12 @@ public:
 	
 	void SetX(float x_);
 	void SetY(float y_);
+	void setXY(float x_, float y_);
 	
 	float GetX() const;
 	float GetY() const;
+	
+	bool operator==(Point& other_) const;
 	
 private:
 	float m_x;

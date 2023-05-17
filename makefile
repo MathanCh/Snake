@@ -9,23 +9,25 @@ BPATH = ./bin/
 .PHONY : clean
 .PHONY : run
 .PHONY : gitupdate
+.PHONY : open
 
-snakeGame : snakeGameO
-	$(COMPILE) $(OPATH)point.o $(OPATH)borders.o $(OPATH)board.o $(OPATH)snake.o $(OPATH)snake_game.o $(SFML) -o $(BPATH)snake.out
+snakeGame : snake_game.o
+	$(COMPILE) $(OPATH)point.o $(OPATH)borders.o $(OPATH)board.o $(OPATH)snake.o \
+	 $(OPATH)snake_game.o $(SFML) -o $(BPATH)snake_game.out
 
-snakeGameO : snake board
+snake_game.o : snake.o board.o
 	$(COMPILE) $(SFML) -c $(SPATH)snake_game.cpp -o $(OPATH)snake_game.o
 
-snake : borders
+snake.o : board.o
 	$(COMPILE) $(SFML) -c $(SPATH)snake.cpp -o $(OPATH)snake.o
 
-board : borders
+board.o : borders.o
 	$(COMPILE) $(SFML) -c $(SPATH)board.cpp -o $(OPATH)board.o
 
-borders : point
+borders.o : point.o
 	$(COMPILE) $(SFML) -c $(SPATH)borders.cpp -o $(OPATH)borders.o
 
-point : 
+point.o : 
 	$(COMPILE) -c $(SPATH)point.cpp -o $(OPATH)point.o
 
 clean :
@@ -38,3 +40,7 @@ gitupdate :
 	git add .
 	git commit
 	git push
+
+open :
+	gedit $(SPATH)/*.cpp
+	gedit ./include/*.hpp

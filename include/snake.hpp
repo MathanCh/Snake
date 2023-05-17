@@ -3,10 +3,10 @@
 
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include <set>
+#include <vector>
 #include <memory>
 
-#include "borders.hpp"
+#include "board.hpp"
 
 class Snake
 {
@@ -26,30 +26,32 @@ public:
 	float GetXPos() const;
 	float GetYPos() const;
 	float GetRadius() const;
+	float GetSpeed() const;
+	bool GetDeathStatus() const;
 	
 	void SetPos(Point newPos);
 	void setPos(float x, float y);
 	void SetDirection(MoveDirection direction);
 	
 	void Move(Borders wall);
-	void UpdatePos();
 	
 	void IncreaseSize();
 	
 	void DrawSnake(sf::RenderWindow& window);
 	
 private:
-	void CheckWall(Borders wall);
-	void MoveHead(float amount);
+	void CheckWall(Board board);
+	void CheckSelf(Point nextPos);
 	
-	sf::CircleShape m_head;
-	std::set<std::shared_ptr<Point>> m_tail;
+	std::vector<Point> m_snake;
 	float m_size;
 	float m_radius;
 	sf::Color m_color;
-	Point m_center;
+	Point m_pos;
 	float m_speed;
 	MoveDirection m_moveDirection;
+	bool m_isGrowing;
+	bool m_isDead;
 };
 
 #endif /*__SNAKE_HPP__*/
