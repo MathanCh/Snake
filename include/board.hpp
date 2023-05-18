@@ -3,7 +3,7 @@
 
 #include "borders.hpp"
 
-class Board
+class Board: public Borders
 {
 public:
 	enum WallMode
@@ -15,8 +15,6 @@ public:
 	Board(Borders wall_, WallMode wallMode_);
 	
 	WallMode GetWallMode() const;
-	Point GetTopLeft() const;
-	Point GetBottomRight() const;
 	Point GetFoodPos() const;
 	
 	void EatFood();
@@ -26,8 +24,7 @@ public:
 	
 private:
 	static size_t RandomNumber(size_t min, size_t max);
-	
-	Borders m_wall;
+
 	WallMode m_wallMode;
 	bool m_isThereFood;
 	Point m_food;

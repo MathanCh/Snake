@@ -1,12 +1,12 @@
 #ifndef __SNAKE_HPP__
 #define __SNAKE_HPP__
 
-#include <SFML/Graphics.hpp>
 #include <cmath>
 #include <vector>
 #include <memory>
 
 #include "board.hpp"
+#include "segment.hpp"
 
 class Snake
 {
@@ -28,6 +28,7 @@ public:
 	float GetRadius() const;
 	float GetSpeed() const;
 	bool GetDeathStatus() const;
+	MoveDirection GetDirection() const;
 	
 	void SetPos(Point newPos);
 	void setPos(float x, float y);
@@ -40,11 +41,11 @@ public:
 	void DrawSnake(sf::RenderWindow& window);
 	
 private:
-	void CheckWall(Board& board, Point& nextPos);
-	void CheckSelf(Point nextPos);
-	void CheckFood(Board& board, Point nextPos);
+	void CheckWall(Board& board, Segment& nextPos);
+	void CheckSelf(Segment nextPos);
+	void CheckFood(Board& board, Segment nextPos);
 	
-	std::vector<Point> m_snake;
+	std::vector<Segment> m_snake;
 	float m_size;
 	float m_radius;
 	sf::Color m_color;

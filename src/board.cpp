@@ -3,10 +3,10 @@
 
 #include "board.hpp"
 
-#include <iostream>
+//#include <iostream>
 
 Board::Board(Borders wall_, WallMode wallMode_):
-m_wall(wall_), 
+Borders(wall_), 
 m_wallMode(wallMode_), 
 m_isThereFood(false), 
 m_food()
@@ -19,16 +19,6 @@ Board::WallMode Board::GetWallMode() const
 	return m_wallMode;
 }
 
-Point Board::GetTopLeft() const
-{
-	return m_wall.GetTopLeftPt();
-}
-
-Point Board::GetBottomRight() const
-{
-	return m_wall.GetBottomRightPt();
-}
-
 Point Board::GetFoodPos() const
 {
 	return m_food;
@@ -37,25 +27,20 @@ Point Board::GetFoodPos() const
 void Board::EatFood()
 {
 	m_isThereFood = false;
-	//std::cout << "eat! " << m_isThereFood << std::endl;
 }
 
 void Board::GenerateFood(float radius)
 {
 	float diameter = 2 * radius;
 	
-	Point bottomRight = m_wall.GetBottomRightPt();
+	Point bottomRight = this->GetBottomRightPt();
 	size_t numOfXPts = bottomRight.GetX() / diameter - 1;
 	size_t numOfYPts = bottomRight.GetY() / diameter - 1;
 	
-	//std::cout << "generate! " << m_isThereFood << std::endl;
-	
 	if(!m_isThereFood)
 	{
-		m_food.setXY(	RandomNumber(0, numOfXPts) * diameter + m_wall.GetThickness(), 
-						RandomNumber(0, numOfYPts) * diameter + m_wall.GetThickness());
-		
-		//std::cout << m_food << std::endl;
+		m_food.setXY(	RandomNumber(0, numOfXPts) * diameter + this->GetThickness(), 
+						RandomNumber(0, numOfYPts) * diameter + this->GetThickness());
 		
 		m_isThereFood = true;
 	}
@@ -63,7 +48,7 @@ void Board::GenerateFood(float radius)
 
 void Board::DrawBoard(sf::RenderWindow& window, float radius)
 {
-	window.draw(m_wall);
+	window.draw(*this);
 	
 	if(m_isThereFood)
 	{

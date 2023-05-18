@@ -14,7 +14,7 @@ m_moveDirection(moveDirection_),
 m_isGrowing(false), 
 m_isDead(false)
 {
-	m_snake.push_back(m_pos);
+	m_snake.push_back(Segment(m_pos, m_radius, m_color));
 }
 
 Point Snake::GetPos() const
@@ -47,6 +47,11 @@ bool Snake::GetDeathStatus() const
 	return m_isDead;
 }
 
+Snake::MoveDirection Snake::GetDirection() const
+{
+	return m_moveDirection;
+}
+
 void Snake::SetPos(Point newPos)
 {
 	m_pos = newPos;
@@ -67,50 +72,32 @@ void Snake::Move(Board& board)
 {
 	float amount = 2 * m_radius;
 	
-	Point nextPos;
+	Segment nextPos(m_pos, m_radius, m_color);
 	
 	switch(m_moveDirection)
 	{
 		case LEFT:
 			nextPos.setXY(m_pos.GetX() - amount, m_pos.GetY());
-			
-			CheckSelf(nextPos);
-			CheckWall(board, nextPos);
-			CheckFood(board, nextPos);
-			
-			m_snake.push_back(Point(nextPos));
 			break;
 		
 		case RIGHT:
 			nextPos.setXY(m_pos.GetX() + amount, m_pos.GetY());
-			
-			CheckSelf(nextPos);
-			CheckWall(board, nextPos);
-			CheckFood(board, nextPos);
-			
-			m_snake.push_back(Point(nextPos));
 			break;
 		
 		case UP:
 			nextPos.setXY(m_pos.GetX(), m_pos.GetY() - amount);
-			
-			CheckSelf(nextPos);
-			CheckWall(board, nextPos);
-			CheckFood(board, nextPos);
-			
-			m_snake.push_back(Point(nextPos));
 			break;
 		
 		case DOWN:
 			nextPos.setXY(m_pos.GetX(), m_pos.GetY() + amount);
-			
-			CheckSelf(nextPos);
-			CheckWall(board, nextPos);
-			CheckFood(board, nextPos);
-			
-			m_snake.push_back(Point(nextPos));
 			break;
 	}
+	
+	CheckSelf(nextPos);
+	CheckWall(board, nextPos);
+	CheckFood(board, nextPos);
+	
+	m_snake.push_back(nextPos);
 	
 	m_pos = nextPos;
 	
@@ -131,22 +118,18 @@ void Snake::IncreaseSize()
 
 void Snake::DrawSnake(sf::RenderWindow& window)
 {
-	sf::CircleShape segment(m_radius);
-	segment.setFillColor(m_color);
-	
 	for(auto iter = m_snake.begin(); m_snake.end() != iter; ++iter)
 	{
-		segment.setPosition((*iter).GetX(), (*iter).GetY());
-		window.draw(segment);
+		window.draw(*iter);
 	}
 }
 
-void Snake::CheckWall(Board& board, Point& nextPos)
+void Snake::CheckWall(Board& board, Segment& nextPos)
 {
 	Board::WallMode mode(board.GetWallMode());
 	
-	Point topLeft(board.GetTopLeft());
-	Point bottomRight(board.GetBottomRight());
+	Point topLeft(board.GetTopLeftPt());
+	Point bottomRight(board.GetBottomRightPt());
 	
 	switch(mode)
 	{
@@ -181,7 +164,7 @@ void Snake::CheckWall(Board& board, Point& nextPos)
 	}
 }
 
-void Snake::CheckSelf(Point nextPos)
+void Snake::CheckSelf(Segment nextPos)
 {
 	for(auto iter = m_snake.begin(); m_snake.end() != iter; ++iter)
 	{
@@ -192,7 +175,7 @@ void Snake::CheckSelf(Point nextPos)
 	}
 }
 
-void Snake::CheckFood(Board& board, Point nextPos)
+void Snake::CheckFood(Board& board, Segment nextPos)
 {
 	if(nextPos == board.GetFoodPos())
 	{
