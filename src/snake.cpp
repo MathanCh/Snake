@@ -148,7 +148,7 @@ void Snake::CheckWall(Board& board, Segment& nextPos)
 			{
 				nextPos.SetX(bottomRight.GetX() - 2 * m_radius);
 			}
-			else if(nextPos.GetX() > bottomRight.GetX())
+			else if(nextPos.GetX() >= bottomRight.GetX())
 			{
 				nextPos.SetX(topLeft.GetX());
 			}
@@ -156,7 +156,7 @@ void Snake::CheckWall(Board& board, Segment& nextPos)
 			{
 				nextPos.SetY(bottomRight.GetY() - 2 * m_radius);
 			}
-			else if(nextPos.GetY() > bottomRight.GetY())
+			else if(nextPos.GetY() >= bottomRight.GetY())
 			{
 				nextPos.SetY(topLeft.GetY());
 			}

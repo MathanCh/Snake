@@ -17,7 +17,6 @@ private:
 	sf::RenderWindow m_window;
 	Board m_gameBoard;
 	Snake m_snake;
-	bool m_paused;
 };
 
 #endif /*__GAME_HPP__*/

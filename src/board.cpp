@@ -5,8 +5,9 @@
 
 //#include <iostream>
 
-Board::Board(Borders wall_, WallMode wallMode_):
+Board::Board(Borders wall_, Panel panel_, WallMode wallMode_):
 Borders(wall_), 
+m_panel(panel_), 
 m_wallMode(wallMode_), 
 m_isThereFood(false), 
 m_food()
@@ -27,6 +28,8 @@ Point Board::GetFoodPos() const
 void Board::EatFood()
 {
 	m_isThereFood = false;
+
+	m_panel.SetScore(m_panel.GetScore() + 1);
 }
 
 void Board::GenerateFood(float radius)
@@ -46,7 +49,8 @@ void Board::GenerateFood(float radius)
 	}
 }
 
-void Board::DrawBoard(sf::RenderWindow& window, float radius)
+void Board::DrawBoard(	sf::RenderWindow& window, float radius, 
+						bool paused, bool dead)
 {
 	window.draw(*this);
 	
@@ -58,6 +62,8 @@ void Board::DrawBoard(sf::RenderWindow& window, float radius)
 		
 		window.draw(food);
 	}
+
+	m_panel.Draw(window, paused, dead);
 }
 
 size_t Board::RandomNumber(size_t min, size_t max)

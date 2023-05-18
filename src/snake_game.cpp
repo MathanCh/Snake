@@ -15,7 +15,12 @@ int main()
 					Point(windowXSize, windowYSize), 
 					thickness, sf::Color::Blue, sf::Color::Transparent);
 	
-	Board board(wall, Board::WallMode::WARP);
+	Panel panel(Point(0, windowYSize + 2 * thickness), 
+				Point(	windowXSize + 2 * thickness, 
+						windowYSize + 2 * thickness + panelHeight), 
+				sf::Color::White, sf::Color::Black);
+
+	Board board(wall, panel, Board::WallMode::WARP);
 	
 	float radius = 10;
 	float speed = 20;

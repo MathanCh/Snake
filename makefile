@@ -11,8 +11,10 @@ BPATH = ./bin/
 .PHONY : gitupdate
 .PHONY : open
 
-snakeGame : $(OPATH)snake_game.o
-	$(COMPILE) $(OPATH)point.o $(OPATH)segment.o $(OPATH)borders.o $(OPATH)board.o $(OPATH)snake.o $(OPATH)game.o $(OPATH)snake_game.o $(SFML) -o $(BPATH)snake_game.out
+OBJS = $(OPATH)point.o $(OPATH)segment.o $(OPATH)borders.o $(OPATH)panel.o $(OPATH)board.o $(OPATH)snake.o $(OPATH)game.o $(OPATH)snake_game.o
+
+snakeGame : $(OBJS)
+	$(COMPILE) $(OBJS) $(SFML) -o $(BPATH)snake_game.out
 
 $(OPATH)snake_game.o : $(OPATH)game.o
 	$(COMPILE) $(SFML) -c $(SPATH)snake_game.cpp -o $(OPATH)snake_game.o
@@ -23,7 +25,7 @@ $(OPATH)game.o : $(OPATH)snake.o $(OPATH)board.o
 $(OPATH)snake.o : $(OPATH)segment.o $(OPATH)board.o
 	$(COMPILE) $(SFML) -c $(SPATH)snake.cpp -o $(OPATH)snake.o
 
-$(OPATH)board.o : $(OPATH)borders.o
+$(OPATH)board.o : $(OPATH)borders.o $(OPATH)panel.o
 	$(COMPILE) $(SFML) -c $(SPATH)board.cpp -o $(OPATH)board.o
 
 $(OPATH)borders.o : $(OPATH)point.o
@@ -31,6 +33,9 @@ $(OPATH)borders.o : $(OPATH)point.o
 
 $(OPATH)segment.o : $(OPATH)point.o
 	$(COMPILE) $(SFML) -c $(SPATH)segment.cpp -o $(OPATH)segment.o
+
+$(OPATH)panel.o : $(OPATH)point.o
+	$(COMPILE) $(SFML) -c $(SPATH)panel.cpp -o $(OPATH)panel.o
 
 $(OPATH)point.o : 
 	$(COMPILE) -c $(SPATH)point.cpp -o $(OPATH)point.o
