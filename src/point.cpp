@@ -6,6 +6,10 @@ m_y(y_)
 {
 }
 
+Point::~Point()
+{
+}
+
 void Point::SetX(float x_)
 {
 	m_x = x_;

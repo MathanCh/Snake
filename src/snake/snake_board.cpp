@@ -1,11 +1,9 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "board.hpp"
+#include "snake_board.hpp"
 
-//#include <iostream>
-
-Board::Board(Borders wall_, Panel panel_, WallMode wallMode_):
+SnakeBoard::SnakeBoard(Borders wall_, Panel panel_, WallMode wallMode_):
 Borders(wall_), 
 m_panel(panel_), 
 m_wallMode(wallMode_), 
@@ -15,24 +13,24 @@ m_food()
 	srand(time(NULL));
 }
 
-Board::WallMode Board::GetWallMode() const
+SnakeBoard::WallMode SnakeBoard::GetWallMode() const
 {
 	return m_wallMode;
 }
 
-Point Board::GetFoodPos() const
+Point SnakeBoard::GetFoodPos() const
 {
 	return m_food;
 }
 
-void Board::EatFood()
+void SnakeBoard::EatFood()
 {
 	m_isThereFood = false;
 
 	m_panel.SetScore(m_panel.GetScore() + 1);
 }
 
-void Board::GenerateFood(float radius)
+void SnakeBoard::GenerateFood(float radius)
 {
 	float diameter = 2 * radius;
 	
@@ -49,7 +47,7 @@ void Board::GenerateFood(float radius)
 	}
 }
 
-void Board::DrawBoard(	sf::RenderWindow& window, float radius, 
+void SnakeBoard::DrawBoard(	sf::RenderWindow& window, float radius, 
 						bool paused, bool dead)
 {
 	window.draw(*this);
@@ -66,7 +64,14 @@ void Board::DrawBoard(	sf::RenderWindow& window, float radius,
 	m_panel.Draw(window, paused, dead);
 }
 
-size_t Board::RandomNumber(size_t min, size_t max)
+void SnakeBoard::Reset()
+{
+	m_panel.SetScore(0);
+
+	m_isThereFood = false;
+}
+
+size_t SnakeBoard::RandomNumber(size_t min, size_t max)
 {
 	return ((rand() % (max - (min - 1))) + min);
 }

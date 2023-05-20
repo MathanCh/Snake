@@ -4,7 +4,7 @@
 #include "borders.hpp"
 #include "panel.hpp"
 
-class Board: public Borders
+class SnakeBoard: public Borders
 {
 public:
 	enum WallMode
@@ -13,7 +13,7 @@ public:
 		KILL = 1
 	};
 	
-	Board(Borders wall_, Panel panel_, WallMode wallMode_);
+	SnakeBoard(Borders wall_, Panel panel_, WallMode wallMode_);
 	
 	WallMode GetWallMode() const;
 	Point GetFoodPos() const;
@@ -23,6 +23,8 @@ public:
 	void GenerateFood(float radius);
 	void DrawBoard(	sf::RenderWindow& window, float radius, 
 					bool paused, bool dead);
+	
+	void Reset();
 	
 private:
 	static size_t RandomNumber(size_t min, size_t max);

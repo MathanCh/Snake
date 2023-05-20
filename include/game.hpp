@@ -1,22 +1,21 @@
 #ifndef __GAME_HPP__
-#define __GAEM_HPP__
+#define __GAME_HPP__
 
 #include <string>
 
-#include "board.hpp"
-#include "snake.hpp"
-
-class SnakeGame
+class Game
 {
 public:
-	SnakeGame(	float width, float height, std::string name, Board gameBoard_, 
-				Snake snake_);
-	
-	void RunGame();
+    Game(std::string name_);
+
+    virtual ~Game();
+
+    virtual void Run() = 0;
+
+    std::string GetName() const;
+    
 private:
-	sf::RenderWindow m_window;
-	Board m_gameBoard;
-	Snake m_snake;
+    std::string m_name;
 };
 
 #endif /*__GAME_HPP__*/

@@ -8,6 +8,8 @@ class Point
 public:
 	Point(float x_ = 0, float y_ = 0);
 	
+	virtual ~Point();
+	
 	void SetX(float x_);
 	void SetY(float y_);
 	void setXY(float x_, float y_);

@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 
-#include "board.hpp"
+#include "snake_board.hpp"
 #include "segment.hpp"
 
 class Snake
@@ -13,10 +13,11 @@ class Snake
 public:
 	enum MoveDirection
 	{
-		LEFT = 0, 
-		RIGHT = 1, 
-		UP = 2, 
-		DOWN = 3
+		NONE = 0, 
+		LEFT = 1, 
+		RIGHT = 2, 
+		UP = 3, 
+		DOWN = 4
 	};
 	
 	Snake(	float radius_, Point center_, float speed_, 
@@ -34,22 +35,24 @@ public:
 	void setPos(float x, float y);
 	void SetDirection(MoveDirection direction);
 	
-	void Move(Board& board);
+	void Move(SnakeBoard& board);
 	
 	void IncreaseSize();
 	
 	void DrawSnake(sf::RenderWindow& window);
 	
+	void ResetSnake();
+
 private:
-	void CheckWall(Board& board, Segment& nextPos);
+	void CheckWall(SnakeBoard& board, Segment& nextPos);
 	void CheckSelf(Segment nextPos);
-	void CheckFood(Board& board, Segment nextPos);
+	void CheckFood(SnakeBoard& board, Segment nextPos);
 	
 	std::vector<Segment> m_snake;
-	float m_size;
 	float m_radius;
 	sf::Color m_color;
 	Point m_pos;
+	Point m_startPos;
 	float m_speed;
 	MoveDirection m_moveDirection;
 	bool m_isGrowing;
